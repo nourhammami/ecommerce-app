@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProductForm from './ProductForm';
+import ProductList from './ProductList';
+import UpdateProduct from './UpdateProduct';
+import Navbar from './navbar'; // Import the new Navbar
 
-function App() {
+const App = () => {
+  const [refresh, setRefresh] = useState(false);
+  const triggerRefresh = () => setRefresh(prev => !prev);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Navbar />
+      <div className="container">
+        <Routes>
+          <Route path="/add" element={<ProductForm onProductAdded={triggerRefresh} />} />
+          <Route path="/products" element={<ProductList refresh={refresh} onRefresh={triggerRefresh} />} />
+          <Route path="/update/:id" element={<UpdateProduct onProductUpdated={triggerRefresh} />} />
+          <Route path="/" element={<ProductList refresh={refresh} onRefresh={triggerRefresh} />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
